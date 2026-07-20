@@ -1,0 +1,30 @@
+# Editors / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Local env files (committed .env.example only — never a real .env)
+.env
+apps/api/.env
+apps/web/.env
+
+# Browser/automation debug artifacts
+.playwright-mcp/
+
+# Alembic sometimes leaves this behind on interrupted runs
+apps/api/.pytest_cache/
+apps/api/.mypy_cache/
+apps/api/.ruff_cache/
+
+# Dependencies / build artifacts
+node_modules/
+apps/api/.venv/
+apps/web/dist/
+apps/api/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/

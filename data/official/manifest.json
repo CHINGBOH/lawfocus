@@ -1,0 +1,96 @@
+{
+  "baseline_date": "2026-07-18",
+  "review_status": "UNVERIFIED",
+  "sources": [
+    {
+      "code": "PRC-COMPANY-LAW-2023",
+      "title": "中华人民共和国公司法（2023年修订）",
+      "authority_url": "https://flk.npc.gov.cn/detail?fileId=&id=ff8081818c9108eb018cb6922f750c07&title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E5%85%AC%E5%8F%B8%E6%B3%95&type=",
+      "content_url": "https://guizhou.chinatax.gov.cn/wjjb/zcfgk/szfl/qt/202512/t20251231_89110326.html",
+      "local_file": "data/official/company-law-2023/company-law-2023.html",
+      "sha256": "b08b135b6c40c7b1f6dfa27434c0c9178119f4fba60f5d8033ecc34b7beca1be",
+      "promulgated_at": "2023-12-29",
+      "effective_from": "2024-07-01"
+    },
+    {
+      "code": "SSE-600519-ANNUAL-REPORT-2025",
+      "title": "贵州茅台酒股份有限公司2025年年度报告",
+      "authority_url": "https://www.sse.com.cn/",
+      "content_url": "https://big5.sse.com.cn/site/cht/www.sse.com.cn/disclosure/listedinfo/announcement/c/new/2026-04-17/600519_20260417_9QS4.pdf",
+      "local_file": "data/official/companies/600519/annual-report-2025.pdf",
+      "extracted_text": "data/official/companies/600519/annual-report-2025.txt",
+      "sha256": "474905deeaf0f875fc0a1b097a626c0c7852c427faadc5d7fc7816cbf45ea288",
+      "reporting_date": "2025-12-31",
+      "published_at": "2026-04-17"
+    },
+    {
+      "code": "CSRC-GOV-2025",
+      "title": "上市公司治理准则",
+      "authority_url": "https://www.csrc.gov.cn/csrc/c101954/c7589726/content.shtml",
+      "content_url": "https://www.csrc.gov.cn/csrc/c101954/c7589726/7589726/files/%E9%99%84%E4%BB%B61.%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E6%B2%BB%E7%90%86%E5%87%86%E5%88%99.pdf",
+      "local_file": "data/official/csrc-governance-2025/csrc-governance-2025.pdf",
+      "sha256": "8110c425eac3660ed5db4668f76a731ccbdb21b4b61f1182e44976a1f5bf090f",
+      "promulgated_at": "2025-10-16",
+      "effective_from": "2026-01-01",
+      "article_numbering": "chinese_numeral_sequential",
+      "note": "证监会公告〔2025〕18号；附件为PDF，未随附提取脚本，见B1/B2任务"
+    },
+    {
+      "code": "CSRC-ID-2023",
+      "title": "上市公司独立董事管理办法",
+      "authority_url": "https://www.csrc.gov.cn/shanghai/c105565/c7426135/content.shtml",
+      "content_url": "https://www.csrc.gov.cn/shanghai/c105565/c7426135/7426135/files/%E9%99%84%E4%BB%B61%EF%BC%9A%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E7%8B%AC%E7%AB%8B%E8%91%A3%E4%BA%8B%E7%AE%A1%E7%90%86%E5%8A%9E%E6%B3%95.pdf",
+      "local_file": "data/official/csrc-id-2023/csrc-id-2023.pdf",
+      "sha256": "880cee9873d843e98224c30698924eba0007f5e715b8b05c1f796e85f1ab003f",
+      "promulgated_at": "2023-08-01",
+      "effective_from": "2023-09-04",
+      "article_numbering": "chinese_numeral_sequential",
+      "note": "证监会令第220号；附件为PDF"
+    },
+    {
+      "code": "SSE-LIST-2026",
+      "title": "上海证券交易所股票上市规则（2026年4月修订）",
+      "authority_url": "https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20260424_10816589.shtml",
+      "content_url": "https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/10816589/files/0017fa2bde184b53b43c046d503f54d0.docx",
+      "local_file": "data/official/sse-list-2026/sse-list-2026.docx",
+      "sha256": "988941c6c98214908aa9438e3ea359881022d192fc3b48aa49fff95523dce627",
+      "promulgated_at": "2026-04-24",
+      "effective_from": "2026-04-24",
+      "article_numbering": "dotted_hierarchical",
+      "note": "上证发〔2026〕42号；附件为DOCX，条号格式为「第4.4.1条」式阿拉伯数字层级编号，与公司法的中文数字连续编号不同，不能复用现有 ARTICLE_MARKER 正则；部分条款有过渡生效期（本文另注明的2026-05-24），需在导入时单独处理"
+    },
+    {
+      "code": "SSE-GOV-2026",
+      "title": "上海证券交易所上市公司自律监管指引第1号——规范运作（2026年4月修订）",
+      "authority_url": "https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20260424_10816605.shtml",
+      "content_url": "https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/10816605/files/ca198f5533fc4e6d9dcbb8753ac2f84d.docx",
+      "local_file": "data/official/sse-gov-2026/sse-gov-2026.docx",
+      "sha256": "6877a85d01ea19150ba35a585d00fbcfa54a0ef6d409249c077be7746206edc8",
+      "promulgated_at": "2026-04-24",
+      "effective_from": "2026-04-24",
+      "article_numbering": "dotted_hierarchical",
+      "note": "上证发〔2026〕44号；附件为DOCX，条号格式推测同SSE-LIST-2026，需下载后逐一核实（B2任务）"
+    },
+    {
+      "code": "SZSE-LIST-2026",
+      "title": "深圳证券交易所股票上市规则（2026年修订）",
+      "authority_url": "https://www.szse.cn/lawrules/rule/allrules/bussiness/t20260424_620193.html",
+      "content_url": "https://docs.static.szse.cn/www/lawrules/rule/allrules/bussiness/W020260424747613955674.pdf",
+      "local_file": "data/official/szse-list-2026/szse-list-2026.pdf",
+      "sha256": "958a07598a1919fe7fed7695c9e778dd029d72a38cf48faeba54cfefdb7c581c",
+      "promulgated_at": "2026-04-24",
+      "effective_from": "2026-04-24",
+      "article_numbering": "dotted_hierarchical",
+      "note": "深证上〔2026〕549号；附件为PDF，条号格式推测同SSE-LIST-2026，需下载后逐一核实（B2任务）"
+    }
+  ],
+  "deferred_sources": [
+    {
+      "code": "CSRC-AOA-2025",
+      "title": "上市公司章程指引",
+      "authority_url": "https://neris.csrc.gov.cn/falvfagui/rdqsHeader/mainbody?navbarId=2&secFutrsLawId=a4051b19ca9d4820b523e69a2d1dc465",
+      "status": "SOURCE_NOT_READY",
+      "note": "2026-07-19 实测：页面为JS动态应用，正文提示「相关文件正在入库」，当前无法取得条文全文；不计入本轮法源采集范围，需定期（建议每周，对应01号文档§5）重新探测该URL"
+    }
+  ]
+}

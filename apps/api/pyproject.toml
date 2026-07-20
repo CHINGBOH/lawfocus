@@ -1,0 +1,48 @@
+[project]
+name = "lawfocus-api"
+version = "0.1.0"
+description = "经济法知识图谱与上市公司治理合规推理系统 - API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.5.0",
+    "sqlalchemy>=2.0.35",
+    "alembic>=1.13.2",
+    "psycopg[binary]>=3.2.2",
+    "python-jose[cryptography]>=3.3.0",
+    "bcrypt>=4.2.0",
+    "python-multipart>=0.0.9",
+    "python-docx>=1.2.0",
+    "pdfplumber>=0.11.10",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.3",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.27.2",
+    "ruff>=0.7.0",
+    "mypy>=1.11.2",
+]
+
+[tool.uv]
+package = false
+exclude-newer = "2026-07-10T00:00:00Z"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true

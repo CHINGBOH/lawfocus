@@ -1,0 +1,70 @@
+import enum
+
+
+class TruthValueEnum(enum.StrEnum):
+    TRUE = "TRUE"
+    FALSE = "FALSE"
+    UNKNOWN = "UNKNOWN"
+    CONFLICT = "CONFLICT"
+    NOT_APPLICABLE = "NOT_APPLICABLE"
+
+
+class RbacRoleCode(enum.StrEnum):
+    READER = "READER"
+    COMPLIANCE_USER = "COMPLIANCE_USER"
+    KNOWLEDGE_EDITOR = "KNOWLEDGE_EDITOR"
+    LEGAL_REVIEWER = "LEGAL_REVIEWER"
+    TECHNICAL_REVIEWER = "TECHNICAL_REVIEWER"
+    PUBLISHER = "PUBLISHER"
+    AUDITOR = "AUDITOR"
+    SYSTEM_ADMIN = "SYSTEM_ADMIN"
+
+
+class ReviewStatus(enum.StrEnum):
+    DRAFT = "DRAFT"
+    IN_REVIEW = "IN_REVIEW"
+    CHANGES_REQUESTED = "CHANGES_REQUESTED"
+    LEGAL_APPROVED = "LEGAL_APPROVED"
+    TECH_APPROVED = "TECH_APPROVED"
+    PUBLISHED = "PUBLISHED"
+    DEPRECATED = "DEPRECATED"
+    UNVERIFIED = "UNVERIFIED"
+
+
+class ReviewType(enum.StrEnum):
+    LEGAL = "LEGAL"
+    TECHNICAL = "TECHNICAL"
+
+
+class ReviewDecisionType(enum.StrEnum):
+    APPROVED = "APPROVED"
+    CHANGES_REQUESTED = "CHANGES_REQUESTED"
+
+
+class RuleTestCaseType(enum.StrEnum):
+    PASS = "PASS"
+    VIOLATION = "VIOLATION"
+    BOUNDARY = "BOUNDARY"
+    MISSING_FACT = "MISSING_FACT"
+    NOT_APPLICABLE = "NOT_APPLICABLE"
+    EXCEPTION = "EXCEPTION"
+    CONFLICT = "CONFLICT"
+
+
+class SubjectType(enum.StrEnum):
+    COMPANY = "COMPANY"
+    LISTED_COMPANY = "LISTED_COMPANY"
+    PERSON = "PERSON"
+    REGULATOR = "REGULATOR"
+
+
+class ComplianceCheckStatus(enum.StrEnum):
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
+
+class RuleSetStatus(enum.StrEnum):
+    DRAFT = "DRAFT"
+    PUBLISHED = "PUBLISHED"
+    DEPRECATED = "DEPRECATED"
