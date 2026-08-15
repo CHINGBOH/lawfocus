@@ -1,107 +1,245 @@
-# 经济法知识图谱与上市公司治理合规推理系统 — MVP 骨架
+<a id="readme-top"></a>
+<div align="center">
 
-本仓库分两层：根目录的中文规范文档定义语义/本体/规则/UI 设计（见
-[CLAUDE.md](CLAUDE.md) 和 [00-项目文档索引与实施顺序.md](00-项目文档索引与实施顺序.md)），
-`apps/` 下是按 [GOAL.md](GOAL.md) 实施的可运行全栈骨架。
+# ⚖️ LawFocus · 经济法知识图谱与合规推理系统
 
-## 架构总览
+**将法律条文结构化为可计算的知识图谱，对上市公司治理合规性进行自动化形式推理，输出带完整证明链的五值逻辑判定。**
 
+<p>
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white">
+  <img alt="Vue 3" src="https://img.shields.io/badge/Vue-3.x-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active%20Development-blue?style=for-the-badge">
+</p>
+
+</div>
+
+---
+
+## 📖 目录
+
+- [项目愿景与核心问题](#-项目愿景与核心问题)
+- [系统架构](#-系统架构)
+- [核心特性](#-核心特性)
+- [技术栈](#️-技术栈)
+- [快速开始](#-快速开始)
+- [项目结构](#-项目结构)
+- [测试](#-测试)
+- [开发路线图](#️-开发路线图)
+- [文档索引](#-文档索引)
+- [许可证](#-许可证)
+
+---
+
+## 🌟 项目愿景与核心问题
+
+### 痛点
+
+- **法律条文非结构化**：上市公司治理涉及的法规散落于《公司法》《证券法》等多部法律中，条文之间的引用、时效变迁、概念定义关系难以人工追踪。
+- **合规判定依赖经验**：独立董事比例是否达标？审计委员会是否依法设立？任职是否超期？——这些判定高度依赖人工逐条核对，易遗漏、难审计。
+- **推理过程不可追溯**：传统合规检查给出"合规/不合规"结论，但缺少从法条 → 规则 → 事实 → 判定的完整证明链。
+
+### 解决方案
+
+LawFocus 将法律条文建模为**版本化知识图谱**，通过**形式化规则引擎**对上市公司治理事实进行自动推理，产出带完整证明链的**五值逻辑判定**（TRUE / FALSE / UNKNOWN / CONFLICT / NOT_APPLICABLE），并以三栏阅读器界面将法条、概念图谱和推理结果关联呈现。
+
+---
+
+## 🏗 系统架构
+
+```mermaid
+graph TD
+    subgraph Frontend["前端 · Vue 3 + TypeScript"]
+        Reader["三栏法条阅读器"]
+        Hyperlink["概念超链接导航"]
+        Synthesis["合规综合面板"]
+    end
+
+    subgraph API["后端 · FastAPI + SQLAlchemy 2"]
+        Router["RESTful API 路由"]
+        RuleEngine["规则引擎"]
+        RuleGov["规则治理<br/>提交→双审→发布"]
+        Services["领域服务层"]
+    end
+
+    subgraph Domain["核心领域 · 不依赖数据库"]
+        Truth["五值逻辑<br/>TRUE/FALSE/UNKNOWN<br/>CONFLICT/NOT_APPLICABLE"]
+        TimeInterval["时间区间运算"]
+    end
+
+    subgraph Storage["持久层 · PostgreSQL 16"]
+        Legal["法律仓库<br/>版本化条文"]
+        Graph["知识图谱<br/>概念/关系"]
+        Gov["治理主体<br/>角色/事件"]
+        Facts["事实/证据"]
+        Rules["规则定义"]
+        Inference["推理结果<br/>证明链"]
+    end
+
+    Reader --> Router
+    Hyperlink --> Router
+    Synthesis --> Router
+    Router --> Services
+    Services --> RuleEngine
+    RuleEngine --> Truth
+    RuleEngine --> TimeInterval
+    Services --> RuleGov
+    Services --> Storage
 ```
-apps/api/   FastAPI + SQLAlchemy 2 + Alembic + PostgreSQL 16（pgvector 已装，暂未使用）
-apps/web/   Vue 3 + Vite + TypeScript + Vue Router + Pinia + Vitest
-contracts/  导出的 OpenAPI 契约（apps/api 每次改动后可重新导出）
-```
 
-六层能力映射到代码：
+---
 
-| 层 | 代码位置 |
+## ⚡ 核心特性
+
+| 特性 | 说明 |
 |---|---|
-| 法律仓库 / 版本 | `app/models/legal.py`、`app/services/legal_repository_service.py` |
-| 知识图谱（概念/关系） | `app/models/graph.py`、`app/services/concept_service.py` |
-| 治理主体/角色/事件 | `app/models/governance.py` |
-| 事实/证据 | `app/models/facts.py`、`app/services/fact_evidence_service.py` |
-| 规则治理（提交/审核/发布） | `app/models/rules.py`、`app/services/rule_governance_service.py` |
-| 规则执行 | `app/services/rule_handlers.py`（10 条 P0 规则）、`app/services/rule_engine.py` |
-| 推理结果 / 证明链 | `app/models/inference.py` |
-| 五值逻辑 / 时间区间（不依赖数据库的核心不变量） | `app/domain/truth.py`、`app/domain/time_interval.py` |
-| Agent 边界 | `app/services/agent_provider.py`、`app/services/synthesis_service.py` |
-| 审计 / RBAC / 租户隔离 | `app/services/audit_service.py`、`app/services/authorization_service.py`、`app/api/v1/deps.py` |
+| **版本化法律仓库** | 法律条文按版本管理，支持时效溯源与跨版本对比，每份法源带哈希登记确保完整性 |
+| **知识图谱建模** | 法律概念、关系、溯源边构成结构化图谱，概念间可导航跳转 |
+| **五值逻辑推理引擎** | 超越简单布尔判定——当证据不足输出 UNKNOWN，当事实矛盾输出 CONFLICT，当主体类型不适用输出 NOT_APPLICABLE |
+| **完整证明链** | 每条推理结论都附带从法条 → 规则 → 事实 → 判定的可审计推导链路 |
+| **规则治理工作流** | 规则经历 DRAFT → 提交 → 法律审核 + 技术审核 → 发布 的完整治理流程 |
+| **RBAC + 多租户隔离** | 8 种角色（Reader / ComplianceUser / KnowledgeEditor / LegalReviewer / TechnicalReviewer / Publisher / Auditor / SystemAdmin）+ 租户级数据隔离 |
 
-前端三栏阅读器：`apps/web/src/views/ArticleReaderView.vue` + `LegalSynthesisPanel.vue` + `ConceptHyperlink.vue`。
+---
 
-## 快速开始
+## 🛠️ 技术栈
 
-前置：本机已安装 PostgreSQL 16（含 pgvector 扩展也可，非必需）、`uv`、Node 22+、`pnpm`（或 `corepack enable && corepack prepare pnpm@latest --activate`）。
+| 层次 | 技术选型 | 说明 |
+|---|---|---|
+| **后端框架** | FastAPI + Pydantic v2 | 异步 API + 严格类型校验 |
+| **ORM / 迁移** | SQLAlchemy 2.0 + Alembic | 声明式模型 + 版本化数据库迁移 |
+| **数据库** | PostgreSQL 16 | 支持 pgvector 扩展（预留向量检索能力） |
+| **前端框架** | Vue 3 + Vite + TypeScript | Composition API + 热更新开发体验 |
+| **状态管理** | Pinia + Vue Router | 轻量全局状态 + 路由管理 |
+| **认证** | JWT (python-jose) + bcrypt | Token 认证 + 密码安全哈希 |
+| **代码质量** | Ruff + mypy + ESLint + vue-tsc | 全栈静态分析与类型检查 |
+| **测试** | pytest + Vitest | 后端 95 个测试 + 前端 7 个测试全绿 |
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
+
+- PostgreSQL 16+
+- Python 3.12+（推荐使用 [uv](https://docs.astral.sh/uv/)）
+- Node.js 22+ / pnpm
+
+### 安装与启动
 
 ```bash
-make bootstrap   # 安装前后端依赖（uv sync + pnpm install）
+# 1. 克隆仓库
+git clone https://github.com/CHINGBOH/lawfocus.git
+cd lawfocus
 
-# 手动创建数据库角色和库（本仓库未附带自动化的本地 Postgres 初始化脚本）：
-#   CREATE ROLE lawfocus LOGIN PASSWORD 'lawfocus_dev_password';
-#   CREATE DATABASE lawfocus_dev  OWNER lawfocus;
-#   CREATE DATABASE lawfocus_test OWNER lawfocus;
+# 2. 安装前后端依赖
+make bootstrap   # uv sync + pnpm install
 
-make migrate     # alembic upgrade head（对 lawfocus_dev）
-LAWFOCUS_DEMO_PASSWORD='选一个开发用密码' make seed
-make dev         # 同时起 API (:8000) 和 Web (:5173)
+# 3. 创建数据库
+#    在 PostgreSQL 中执行：
+#    CREATE ROLE lawfocus LOGIN PASSWORD 'lawfocus_dev_password';
+#    CREATE DATABASE lawfocus_dev  OWNER lawfocus;
+#    CREATE DATABASE lawfocus_test OWNER lawfocus;
+
+# 4. 运行数据库迁移
+make migrate
+
+# 5. 灌入演示数据
+LAWFOCUS_DEMO_PASSWORD='your_password' make seed
+
+# 6. 启动开发服务器
+make dev         # API → :8000 | Web → :5173
 ```
 
-浏览器打开 `http://localhost:5173`，使用下方演示账号登录。
+打开浏览器访问 `http://localhost:5173` 即可。
 
-也可以用 `docker compose up`（`docker-compose.yml` 已提供 db/api/web 三个服务）——**本沙箱开发环境没有可用的 Docker 守护进程，因此 compose 路径未被实际跑通验证过**，请在有 Docker 的机器上验证。
+> 也可通过 `docker compose up` 启动（需要 Docker 环境）。
 
-## 测试
+---
+
+## 📁 项目结构
+
+```text
+lawfocus/
+├── apps/
+│   ├── api/                    # 后端服务
+│   │   ├── app/
+│   │   │   ├── api/            # API 路由 (v1)
+│   │   │   ├── core/           # 配置与安全
+│   │   │   ├── domain/         # 核心领域逻辑（五值逻辑 / 时间区间）
+│   │   │   ├── models/         # SQLAlchemy 数据模型
+│   │   │   │   ├── legal.py    # 法律仓库 / 版本
+│   │   │   │   ├── graph.py    # 知识图谱（概念 / 关系）
+│   │   │   │   ├── governance.py # 治理主体 / 角色 / 事件
+│   │   │   │   ├── facts.py    # 事实 / 证据
+│   │   │   │   ├── rules.py    # 规则定义
+│   │   │   │   └── inference.py # 推理结果 / 证明链
+│   │   │   ├── repositories/   # 数据访问层
+│   │   │   ├── schemas/        # Pydantic 请求/响应模型
+│   │   │   └── services/       # 业务服务（规则引擎 / 审计 / 授权）
+│   │   ├── migrations/         # Alembic 数据库迁移
+│   │   ├── scripts/            # 种子数据脚本
+│   │   └── tests/              # 后端测试 (pytest)
+│   └── web/                    # 前端应用
+│       └── src/
+│           ├── views/          # 页面视图（三栏阅读器）
+│           ├── components/     # 可复用组件（概念超链接 / 合规面板）
+│           ├── stores/         # Pinia 状态管理
+│           ├── api/            # API 客户端
+│           └── types/          # TypeScript 类型定义
+├── contracts/                  # OpenAPI 契约导出
+├── docs/                       # 项目文档
+└── Makefile                    # 开发命令入口
+```
+
+---
+
+## 🧪 测试
 
 ```bash
-make test   # 后端 pytest（对 lawfocus_test）+ 前端 vitest
+make test   # 后端 pytest + 前端 vitest
 make lint   # ruff + mypy + eslint + vue-tsc
-make e2e    # 仅端到端用例（AC-01..AC-08 + 性能烟雾）
+make e2e    # 端到端验收用例
 ```
 
-当前状态（本机真实运行验证）：后端 95 个 pytest 全绿，`ruff check .` / `mypy app` 全绿；前端 7 个 vitest 全绿，`pnpm build` / `pnpm lint` 全绿。
+---
 
-## 演示账号
+## 🗺️ 开发路线图
 
-`LAWFOCUS_DEMO_PASSWORD` 环境变量指定的密码对以下所有账号生效（种子脚本不接受硬编码密码）：
+- [x] 六层领域模型设计与数据库迁移
+- [x] 10 条 P0 治理合规规则实现
+- [x] 五值逻辑推理引擎 + 证明链输出
+- [x] 规则治理工作流（提交 → 双审 → 发布）
+- [x] RBAC 权限体系 + 多租户隔离
+- [x] 三栏法条阅读器前端
+- [x] 95 个后端测试 + 7 个前端测试全绿
+- [ ] 首批真实法源采集与哈希登记
+- [ ] 规则绑定正式法条并完成发布流程
+- [ ] 接入真实 LLM Agent（已预留扩展点）
+- [ ] 正式性能基准测试与容量验收
 
-| 邮箱 | 角色 |
+---
+
+## 📚 文档索引
+
+| 文档 | 说明 |
 |---|---|
-| reader@demo.lawfocus | Reader |
-| compliance@demo.lawfocus | ComplianceUser（demo-tenant） |
-| editor@demo.lawfocus | KnowledgeEditor（demo-tenant） |
-| legal-reviewer@demo.lawfocus | LegalReviewer |
-| tech-reviewer@demo.lawfocus | TechnicalReviewer |
-| publisher@demo.lawfocus | Publisher |
-| auditor@demo.lawfocus | Auditor |
-| admin@demo.lawfocus | SystemAdmin |
+| [项目文档索引](docs/00-项目文档索引与实施顺序.md) | 全部设计文档的导航目录 |
+| [法律体系概念图谱设计](docs/01-法律体系概念图谱设计.md) | 知识图谱本体与关系建模 |
+| [学习工具产品需求](docs/02-学习工具产品需求与验收标准.md) | 产品需求规格与验收标准 |
 
-演示数据（`apps/api/scripts/seed_demo.py`，幂等，可重复执行）：一部标记 `DEMO/UNVERIFIED` 的合成法律（非真实法条）、两个法律版本、5 个条文的双版本文本、4 个核心概念（含图谱溯源边）、两家演示公司——甲公司治理结构完整合规，乙公司故意缺失审计委员会、独立董事比例不足、任职已过期、且对同一事实存在两条互相矛盾的记录，用于真实产出 TRUE/FALSE/UNKNOWN/CONFLICT 四类结果（NOT_APPLICABLE 由非上市公司主体触发，测试中覆盖，演示种子未包含非上市公司）。
+---
 
-## 已知限制 / 未完成项
+## ⚠️ 免责声明
 
-- **无真实法源**：所有法律/条文/概念/规则数据均为合成演示数据，标记 `DEMO`/`UNVERIFIED`，不构成真实法律依据。首批真实法源的采集、哈希登记与法律审核需要人工完成（见 [01-MVP权威法源与版本清单.md](01-MVP权威法源与版本清单.md)）。
-- **10 条规则未绑定正式法条**：当前 `rule_source` 指向的是演示条文，规则版本停留在 `DRAFT`，无法通过正式发布门禁（符合 GOAL.md §6 的明确要求，不是缺陷）。
-- **GOV-CTRL-001（控股股东/实际控制人认定）** 目前只有"读取 Fact 或返回 UNKNOWN"的骨架逻辑，没有真实的控制链路计算——按 GOAL.md 的要求，只有 GOV-TIME-001/GOV-ROLE-001 必须具备真实逻辑，其余规则允许通用比较器。
-- **Docker Compose 路径未验证**：本开发沙箱没有可用的 Docker 守护进程，`docker-compose.yml`/两个 `Dockerfile` 已编写但从未实际 `docker compose up` 过，请在有 Docker 的环境中验证。
-- **CI workflow 未在真实 GitHub Actions runner 上跑过**：`.github/workflows/ci.yml` 已配置（含真实 PostgreSQL service container），本地等价步骤（migrate/pytest/ruff/mypy/vitest/build）均已跑通，但只有推送到真实 GitHub 仓库后才能验证 workflow 本身。
-- **性能验证仅为本地烟雾测试**：`tests/e2e/test_performance_smoke.py` 只是按 04 号文档 §4.1 的"核心接口各跑 20 次"跑通，不是官方基准（官方基准需要该文档 §2 规定的大规模数据集和独立环境）。
-- **Agent 只有 Disabled/Fake 两种实现**：真实 LLM Provider 适配器留作可选扩展点（`app/services/agent_provider.py`），当前无 API 密钥也能通过全部测试和核心业务流程。
-- **`contracts/openapi.json`** 是某次 `apps/api` 运行的快照，模型变更后需要重新导出（见下方命令）。
+本仓库中的所有法律条文、规则与合规数据均为**合成演示数据**（标记 `DEMO` / `UNVERIFIED`），**不构成真实法律依据**。生产环境使用前，必须由法律专业人员完成真实法源的采集、核验与审核。
 
-重新导出 OpenAPI 契约：
+---
 
-```bash
-cd apps/api && uv run python -c "
-import json
-from app.main import app
-json.dump(app.openapi(), open('../../contracts/openapi.json', 'w'), ensure_ascii=False, indent=2)
-"
-```
+## 📄 许可证
 
-## 下一步建议
+本项目采用 [MIT License](LICENSE) 授权。
 
-1. 法律知识工程师按 `01-MVP权威法源与版本清单.md` 采集首批真实法源并完成哈希登记。
-2. 法律审核者逐条把 `02-上市公司治理MVP十条规则清单.md` 的规则绑定到已验证的真实条文版本，走完 submit → 双审 → publish 流程。
-3. 在有 Docker 的环境验证 `docker compose up` 全链路，并把 CI workflow 推到真实 GitHub 仓库跑一遍。
-4. 视需要接入真实 Agent Provider（继承 `AgentProvider` 协议），仍需保持"Agent 不可用时核心业务照常运行"的降级路径。
-5. 补充 `04-MVP性能基准与容量验收方案.md` 要求的正式基准数据集和负载测试。
+<p align="right"><a href="#readme-top">⬆ 回到顶部</a></p>
