@@ -1,0 +1,8 @@
+# LawFocus Legal Concept Graph & Compliance System
+fastapi>=0.110.0
+uvicorn>=0.28.0
+sqlalchemy>=2.0.0
+alembic>=1.13.1
+psycopg2-binary>=2.9.9
+pgvector>=0.2.5
+pydantic>=2.7.0
