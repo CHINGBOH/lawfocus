@@ -8,9 +8,10 @@
 <p>
   <img alt="Python" src="https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white">
   <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi&logoColor=white">
-  <img alt="Vue 3" src="https://img.shields.io/badge/Vue-3.x-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white">
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img alt="Vue 3" src="https://img.shields.io/badge/Vue-3.5+-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-6.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
   <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge">
   <img alt="Status" src="https://img.shields.io/badge/Status-Active%20Development-blue?style=for-the-badge">
 </p>
 
@@ -29,6 +30,7 @@
 - [测试](#-测试)
 - [开发路线图](#️-开发路线图)
 - [文档索引](#-文档索引)
+- [免责声明](#️-免责声明)
 - [许可证](#-许可证)
 
 ---
@@ -108,14 +110,14 @@ graph TD
 
 | 层次 | 技术选型 | 说明 |
 |---|---|---|
-| **后端框架** | FastAPI + Pydantic v2 | 异步 API + 严格类型校验 |
+| **后端框架** | FastAPI 0.115+ + Pydantic v2 | 异步 API + 严格类型校验 |
 | **ORM / 迁移** | SQLAlchemy 2.0 + Alembic | 声明式模型 + 版本化数据库迁移 |
 | **数据库** | PostgreSQL 16 | 支持 pgvector 扩展（预留向量检索能力） |
-| **前端框架** | Vue 3 + Vite + TypeScript | Composition API + 热更新开发体验 |
+| **前端框架** | Vue 3.5 + Vite + TypeScript 6 | Composition API + 热更新开发体验 |
 | **状态管理** | Pinia + Vue Router | 轻量全局状态 + 路由管理 |
 | **认证** | JWT (python-jose) + bcrypt | Token 认证 + 密码安全哈希 |
 | **代码质量** | Ruff + mypy + ESLint + vue-tsc | 全栈静态分析与类型检查 |
-| **测试** | pytest + Vitest | 后端 95 个测试 + 前端 7 个测试全绿 |
+| **测试** | pytest + Vitest | 后端 120 个测试 + 前端 13 个测试（实测记录见[基线报告](docs/verification/baseline.md)） |
 
 ---
 
@@ -155,7 +157,7 @@ make dev         # API → :8000 | Web → :5173
 
 打开浏览器访问 `http://localhost:5173` 即可。
 
-> 也可通过 `docker compose up` 启动（需要 Docker 环境）。
+> 说明：仓库根目录的 `main.py` 仅为占位入口（仅打印一行初始化信息），实际后端服务入口为 `apps/api/app/main.py`，请通过上述 `make dev` 启动。
 
 ---
 
@@ -170,27 +172,24 @@ lawfocus/
 │   │   │   ├── core/           # 配置与安全
 │   │   │   ├── domain/         # 核心领域逻辑（五值逻辑 / 时间区间）
 │   │   │   ├── models/         # SQLAlchemy 数据模型
-│   │   │   │   ├── legal.py    # 法律仓库 / 版本
-│   │   │   │   ├── graph.py    # 知识图谱（概念 / 关系）
-│   │   │   │   ├── governance.py # 治理主体 / 角色 / 事件
-│   │   │   │   ├── facts.py    # 事实 / 证据
-│   │   │   │   ├── rules.py    # 规则定义
-│   │   │   │   └── inference.py # 推理结果 / 证明链
 │   │   │   ├── repositories/   # 数据访问层
 │   │   │   ├── schemas/        # Pydantic 请求/响应模型
 │   │   │   └── services/       # 业务服务（规则引擎 / 审计 / 授权）
 │   │   ├── migrations/         # Alembic 数据库迁移
 │   │   ├── scripts/            # 种子数据脚本
-│   │   └── tests/              # 后端测试 (pytest)
+│   │   └── tests/              # 后端测试 (pytest：unit / integration / e2e)
 │   └── web/                    # 前端应用
 │       └── src/
 │           ├── views/          # 页面视图（三栏阅读器）
 │           ├── components/     # 可复用组件（概念超链接 / 合规面板）
 │           ├── stores/         # Pinia 状态管理
+│           ├── router/         # Vue Router 路由
 │           ├── api/            # API 客户端
 │           └── types/          # TypeScript 类型定义
-├── contracts/                  # OpenAPI 契约导出
+├── contracts/                  # OpenAPI 契约导出 (openapi.json)
 ├── docs/                       # 项目文档
+│   └── verification/           # 实测基线与验证报告
+├── main.py                     # 根级占位入口（见快速开始说明）
 └── Makefile                    # 开发命令入口
 ```
 
@@ -204,6 +203,8 @@ make lint   # ruff + mypy + eslint + vue-tsc
 make e2e    # 端到端验收用例
 ```
 
+最近一次全量实测（2026-07-18，记录于 [docs/verification/baseline.md](docs/verification/baseline.md)）：后端 **120 passed**，前端 **13 passed / 5 files**，ruff / mypy / eslint / vue-tsc 全部通过。
+
 ---
 
 ## 🗺️ 开发路线图
@@ -214,10 +215,11 @@ make e2e    # 端到端验收用例
 - [x] 规则治理工作流（提交 → 双审 → 发布）
 - [x] RBAC 权限体系 + 多租户隔离
 - [x] 三栏法条阅读器前端
-- [x] 95 个后端测试 + 7 个前端测试全绿
+- [x] 全量测试与静态检查基线（后端 120 / 前端 13，见基线报告）
 - [ ] 首批真实法源采集与哈希登记
 - [ ] 规则绑定正式法条并完成发布流程
-- [ ] 接入真实 LLM Agent（已预留扩展点）
+- [ ] 接入 LLM 辅助推理（已预留扩展点）
+- [ ] Docker Compose 一键部署（Makefile 已预留 `up`/`down` 目标，编排文件待补）
 - [ ] 正式性能基准测试与容量验收
 
 ---
@@ -229,12 +231,13 @@ make e2e    # 端到端验收用例
 | [项目文档索引](docs/00-项目文档索引与实施顺序.md) | 全部设计文档的导航目录 |
 | [法律体系概念图谱设计](docs/01-法律体系概念图谱设计.md) | 知识图谱本体与关系建模 |
 | [学习工具产品需求](docs/02-学习工具产品需求与验收标准.md) | 产品需求规格与验收标准 |
+| [测试基线报告](docs/verification/baseline.md) | 最近一次全量测试与静态检查实测记录 |
 
 ---
 
 ## ⚠️ 免责声明
 
-本仓库中的所有法律条文、规则与合规数据均为**合成演示数据**（标记 `DEMO` / `UNVERIFIED`），**不构成真实法律依据**。生产环境使用前，必须由法律专业人员完成真实法源的采集、核验与审核。
+本仓库中的所有法律条文、规则与合规数据均为**合成演示数据**（标记 `DEMO` / `UNVERIFIED`），**不构成真实法律依据，也不构成任何法律意见**。生产环境使用前，必须由法律专业人员完成真实法源的采集、核验与审核。
 
 ---
 
