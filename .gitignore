@@ -28,3 +28,17 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 *.egg-info/
+
+# Lean Architecture Anti-Bloat Filters
+*.py[cod]
+*$py.class
+*.bak
+*.tmp
+*.orig
+*.swp
+*.swo
+Thumbs.db
+*.tsbuildinfo
+*.log
+build/
+.cache/
